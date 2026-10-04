@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#09040f">
+<title>Happy Teachers Day — Ms. Sanchez</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#08030d;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,textarea{font:inherit}button{border:0}
+.screen{position:fixed;inset:0;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 20% 20%,#a855f733,transparent 33%),radial-gradient(circle at 80% 80%,#ec489933,transparent 34%),#08030d}
+.card{width:min(470px,100%);padding:30px;border:1px solid #ffffff1c;border-radius:28px;background:#ffffff0b;backdrop-filter:blur(20px);box-shadow:0 25px 80px #0008;text-align:center}
+h1{margin:0 0 12px;font-size:clamp(28px,8vw,48px)}
+p{color:#d9cde1;line-height:1.55}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.btn{padding:12px 20px;border-radius:13px;color:#fff;background:#ffffff12;border:1px solid #ffffff16;cursor:pointer;transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-2px);background:#ffffff20}.yes{background:linear-gradient(135deg,#a855f7,#ec4899)}
+
+#teacherPage{position:fixed;inset:0;display:none;overflow:hidden;background:radial-gradient(circle at 50% 18%,#a855f726,transparent 34%),#08030d}
+.teacher{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;width:100%}
+
+/* FIXED TYPING TITLE */
+.teacher h2{
+  font-size:clamp(29px,8vw,58px);
+  margin:0 0 16px;
+  min-height:1.25em;
+  white-space:normal;
+  background:linear-gradient(90deg,#fff,#e9a9ff,#ffb5dc);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.typing-line{display:inline}
+.typing-cursor{
+  display:inline-block;
+  color:#fff;
+  -webkit-text-fill-color:#fff;
+  animation:blinkCursor .7s steps(1) infinite;
+}
+@keyframes blinkCursor{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+.teacher img{display:block;margin:auto;width:min(520px,82vw);height:min(300px,42vh);object-fit:cover;object-position:center;border-radius:27px;border:1px solid #ffffff26;box-shadow:0 20px 70px #a855f74d;background:linear-gradient(135deg,#281137,#511d52);cursor:pointer;touch-action:manipulation;-webkit-user-drag:none;user-select:none;transition:transform .25s ease}
+.teacher img:active{transform:scale(.98)}
+#musicPlayer{display:flex;align-items:center;gap:9px;margin-top:12px;padding:9px 10px;border:1px solid #ffffff18;border-radius:14px;background:#ffffff0b;backdrop-filter:blur(12px)}
+#musicToggle{width:38px;height:38px;border-radius:11px;background:#ffffff12;color:#fff;cursor:pointer;border:1px solid #ffffff18}
+#musicRange{flex:1;accent-color:#d66cff;cursor:pointer}
+#musicLabel{font-size:11px;color:#cdbbd5;min-width:72px;text-align:left}
+#teacherImage{opacity:1;transition:opacity .45s ease,transform .25s ease}
+#teacherImage.fade{opacity:0}
+.teacher small{display:block;margin-top:10px;color:#cdbbd5}
+
+#mailRain{position:absolute;inset:0;z-index:5;overflow:hidden;pointer-events:none}
+.mail{position:absolute;top:-90px;left:0;width:70px;height:52px;pointer-events:auto;cursor:pointer;will-change:transform;transform:translate3d(var(--x),-100px,0) rotate(var(--r));animation:fall var(--d) linear var(--delay) infinite;touch-action:manipulation}
+@keyframes fall{to{transform:translate3d(var(--x),calc(100vh + 130px),0) rotate(calc(var(--r) + 180deg))}}
+.envelope{position:relative;width:70px;height:52px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#f9dcff,#ffc9e8);box-shadow:0 10px 30px #ec489944}
+.envelope:before,.envelope:after{content:"";position:absolute;bottom:0;width:52%;height:100%;z-index:2}
+.envelope:before{left:0;background:linear-gradient(35deg,transparent 49%,#9d55b066 50%,transparent 51%)}
+.envelope:after{right:0;background:linear-gradient(-35deg,transparent 49%,#9d55b066 50%,transparent 51%)}
+.letter{position:absolute;z-index:3;left:8px;right:8px;top:9px;height:38px;border-radius:6px;background:#fff8fd;transform:translateY(14px);transition:transform 1.2s cubic-bezier(.22,1,.36,1)}
+.flap{position:absolute;z-index:5;left:0;top:0;width:100%;height:31px;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(135deg,#dba5ff,#ff9aca);transform-origin:top center;transition:transform 1.2s cubic-bezier(.22,1,.36,1)}
+.mail.opening{animation:none!important;transition:transform 1s cubic-bezier(.22,1,.36,1);transform:translate3d(calc(50vw - 35px),calc(50vh - 26px),0) scale(1.35)!important;z-index:40}
+.mail.opening .flap{transform:rotateX(180deg)}.mail.opening .letter{transform:translateY(-15px)}
+
+.tracker{position:absolute;z-index:20;right:14px;top:14px;padding:10px 14px;border-radius:13px;background:#160b20bb;border:1px solid #ffffff1c;color:#fff;backdrop-filter:blur(14px);cursor:pointer}
+.panel{display:none;position:absolute;z-index:21;right:14px;top:62px;width:240px;padding:15px;border-radius:18px;background:#160b20dd;border:1px solid #ffffff1b;backdrop-filter:blur(18px)}
+.panel.show{display:block}.musicBox{margin-top:14px;padding-top:12px;border-top:1px solid #ffffff14}.musicTitle{font-size:13px;font-weight:700;margin-bottom:9px}.musicRow{display:flex;align-items:center;gap:8px}.musicBtn{width:34px;height:34px;border-radius:9px;background:#ffffff12;color:#fff;cursor:pointer;border:1px solid #ffffff18}.musicRow input{flex:1;padding:0;background:transparent;border:0}.musicRow span{font-size:10px;color:#cdbbd5;min-width:42px;text-align:right}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.num{padding:8px;border-radius:8px;text-align:center;background:#ffffff0d;color:#d9cde1}.num.done{background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff}
+
+#layer{position:fixed;inset:0;z-index:70;display:none;place-items:center;background:#04010866;backdrop-filter:blur(5px)}
+.popup{width:min(420px,calc(100% - 28px));max-height:90vh;overflow:auto;padding:23px;border-radius:25px;background:linear-gradient(135deg,#a855f743,#ec489938);border:1px solid #ffffff2b;box-shadow:0 30px 100px #0009;backdrop-filter:blur(24px);opacity:0;transform:translateY(22px) scale(.94);transition:.5s cubic-bezier(.22,1,.36,1)}
+.popup.show{opacity:1;transform:none}.popup h3{margin:0 0 7px}.message{margin:13px 0 18px;padding:15px;border-radius:15px;background:#ffffff10;line-height:1.6;max-height:150px;overflow-y:auto;word-break:break-word}
+.label{display:block;font-size:12px;color:#cfbed7;margin:10px 0 6px}
+input,textarea{width:100%;border:1px solid #ffffff1a;border-radius:11px;padding:11px 12px;background:#00000026;color:#fff;outline:none}
+textarea{min-height:78px;resize:none}.row{display:flex;gap:9px;margin-top:14px}.row .btn{flex:1}.status{min-height:18px;margin-top:9px;font-size:12px;color:#dacde1}
+#commentsList{margin-top:8px;max-height:210px;overflow-y:auto;padding-right:4px;overscroll-behavior:contain}
+#commentsList::-webkit-scrollbar{width:5px}
+#commentsList::-webkit-scrollbar-thumb{background:#ffffff25;border-radius:10px}
+.commentToggle{
+  width:100%;margin:0 0 8px;padding:11px 14px;border-radius:12px;
+  color:#fff;background:#ffffff10;border:1px solid #ffffff1a;cursor:pointer;
+  transition:.2s ease;display:flex;align-items:center;justify-content:center;gap:8px
+}
+.commentToggle:hover{background:#ffffff18;transform:translateY(-1px)}
+.commentToggle:active{transform:scale(.98)}
+.commentSection{
+  display:block;
+  margin-top:8px;
+  max-height:0;
+  opacity:0;
+  overflow:hidden;
+  transform:translateY(-10px) scale(.98);
+  transform-origin:top center;
+  transition:max-height .48s cubic-bezier(.22,1,.36,1),opacity .28s ease,transform .48s cubic-bezier(.22,1,.36,1);
+}
+.commentSection.show{
+  max-height:520px;
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+.commentToggle{position:relative;overflow:hidden}
+.commentToggle::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,#ffffff18,transparent);
+  transform:translateX(-120%);transition:transform .55s ease;
+}
+.commentToggle:active::after{transform:translateX(120%)}
+#commentArrow{display:inline-block;margin-left:3px;transition:transform .4s cubic-bezier(.22,1,.36,1)}
+#commentToggle.open #commentArrow{transform:rotate(180deg)}
+.savedComment{animation:commentItemIn .38s cubic-bezier(.22,1,.36,1) both}
+@keyframes commentItemIn{
+  from{opacity:0;transform:translateY(10px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.commentEmpty{padding:10px;color:#cdbbd5;text-align:center}
+.savedComment{
+  position:relative;margin-top:10px;padding:12px 40px 12px 12px;
+  border:1px solid #ffffff16;border-radius:14px;background:#ffffff0b
+}
+.savedCommentHeader{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.savedCommentMessage{font-size:11px;color:#a99bad}
+.savedCommentText{margin-top:7px;color:#d9cde1;word-break:break-word;line-height:1.5}
+.savedCommentDelete{
+  position:absolute;right:8px;top:8px;width:28px;height:28px;
+  border-radius:8px;background:#ff4d6d;color:#fff;cursor:pointer;font-size:18px
+}
+
+#imageViewer{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:20px;background:#040108e8;backdrop-filter:blur(10px);touch-action:none}
+#imageViewer.show{display:grid}#imageViewer img{display:block;width:min(92vw,900px);height:auto;max-height:82vh;object-fit:contain;border-radius:22px;border:1px solid #ffffff2b;box-shadow:0 30px 100px #000b;user-select:none;-webkit-user-drag:none;touch-action:none}
+#imageViewer .viewerClose{position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:50%;background:#ffffff16;color:#fff;border:1px solid #ffffff22;font-size:22px;cursor:pointer;touch-action:manipulation}
+
+#deleteModal{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:20px;background:#040108aa;backdrop-filter:blur(10px);opacity:0;transition:opacity .25s ease}
+#deleteModal.show{display:grid;opacity:1}
+.delete-card{width:min(390px,100%);padding:24px;border-radius:24px;background:linear-gradient(145deg,#21152a,#120b18);border:1px solid #ffffff20;box-shadow:0 30px 90px #000b;transform:translateY(18px) scale(.96);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+#deleteModal.show .delete-card{transform:none}
+.delete-icon{width:54px;height:54px;margin:0 auto 15px;border-radius:17px;display:grid;place-items:center;background:#ff4d6d18;border:1px solid #ff4d6d35;color:#ff718b;font-size:25px}
+.delete-card h3{text-align:center;margin:0 0 8px;font-size:20px}
+.delete-card p{text-align:center;margin:0;color:#cfc1d5;line-height:1.5;font-size:13px}
+.delete-preview{margin:17px 0;padding:12px 14px;border-radius:13px;background:#ffffff09;border:1px solid #ffffff12;color:#e9deed;max-height:75px;overflow:auto;word-break:break-word;font-size:13px}
+.delete-actions{display:flex;gap:10px;margin-top:18px}
+.delete-actions button{flex:1;padding:12px;border-radius:12px;color:#fff;cursor:pointer;border:1px solid #ffffff16;transition:.2s}
+.delete-cancel{background:#ffffff0b}.delete-cancel:hover{background:#ffffff16}
+.delete-confirm{background:linear-gradient(135deg,#ff4d6d,#d93657);box-shadow:0 8px 25px #ff4d6d25}.delete-confirm:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.delete-confirm:disabled{opacity:.6;cursor:not-allowed;transform:none}
+</style>
+</head>
+<body>
+
+<section id="intro" class="screen">
+  <div class="card">
+    <h1>Are you Ms. Sanchez?</h1><p>:)</p>
+    <div class="actions">
+      <button class="btn yes" id="yesBtn">Yes, that's me</button>
+      <button class="btn" id="noBtn">No</button>
+    </div>
+  </div>
+</section>
+
+<section id="question" class="screen" style="display:none">
+  <div class="card"><h1 id="questionText"></h1><p id="wrongText"></p><div id="options" class="actions"></div></div>
+</section>
+
+<section id="countdown" class="screen" style="display:none">
+  <div class="card"><h1 id="count">5</h1><p>🤩Favorite Diay Me Nimo Ms🤩</p></div>
+</section>
+
+<section id="teacherPage">
+  <div id="mailRain"></div>
+  <div class="teacher">
+    <h2>
+      <span id="typingLine1" class="typing-line"></span><span id="cursor1" class="typing-cursor">|</span>
+      <br>
+      <span id="typingLine2" class="typing-line"></span><span id="cursor2" class="typing-cursor">|</span>
+    </h2>
+    <img id="teacherImage" src="haha.jpeg" alt="Ms. Sanchez" draggable="false">
+    <small>Click a falling mail to open an anonymous message. 💌</small>
+  </div>
+  <button class="tracker" id="trackerBtn">☷ <span id="trackerCount">0/15</span></button>
+  <div class="panel" id="trackerPanel"><b>Messages Opened</b><div class="grid" id="grid"></div><div class="musicBox"><div class="musicTitle">🎵 Background Music</div><div class="musicRow"><button class="musicBtn" id="musicToggle">▶</button><input id="musicVolume" type="range" min="0" max="1" step="0.01" value="0.55"><span id="musicState">Paused</span></div></div><audio id="bgMusic" preload="auto" loop autoplay playsinline src="sound.mp3"></audio></div>
+</section>
+
+<div id="imageViewer" aria-hidden="true">
+  <button class="viewerClose" id="viewerClose" aria-label="Close image">×</button>
+  <img id="viewerImage" src="haha.jpeg" alt="Ms. Sanchez">
+</div>
+
+<div id="layer">
+  <div class="popup" id="popup">
+    <h3 id="popupTitle"></h3>
+    <div class="message" id="popupMessage"></div>
+    <button class="commentToggle" id="commentToggle" type="button">💬 <span id="commentToggleText">Comment</span><span id="commentArrow">⌄</span></button>
+
+    <div class="commentSection" id="commentSection">
+      <label class="label">Name</label><input id="name" maxlength="40" value="Sanchez">
+      <label class="label">Comment</label><textarea id="comment" maxlength="300" placeholder="Write a comment..."></textarea>
+      <div class="row"><button class="btn yes" id="saveBtn">Save Comment</button><button class="btn" id="closeBtn">Close</button></div>
+      <div class="status" id="status"></div>
+      <div style="margin-top:18px;font-weight:700">Comments on this message</div>
+      <div id="commentsList" style="max-height:210px;overflow-y:auto;margin-top:6px"></div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <button class="btn" id="closeBtn2" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="deleteModal" aria-hidden="true">
+  <div class="delete-card" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+    <div class="delete-icon">⌫</div>
+    <h3 id="deleteTitle">Delete comment?</h3>
+    <p>This action will permanently remove this comment from the database.</p>
+    <div class="delete-preview" id="deletePreview"></div>
+    <div class="delete-actions">
+      <button class="delete-cancel" id="deleteCancel">Cancel</button>
+      <button class="delete-confirm" id="deleteConfirm">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getDatabase, ref, push, serverTimestamp, onValue, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyDTocfVGWMLwiIjp9xshP8Gohamv4Ffp44",
+  authDomain:"tracherday.firebaseapp.com",
+  databaseURL:"https://tracherday-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"tracherday",
+  storageBucket:"tracherday.firebasestorage.app",
+  messagingSenderId:"321114920818",
+  appId:"1:321114920818:web:b5eb26c0ab317fc40d6feb",
+  measurementId:"G-LEP0N9L6X2"
+};
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
+const $=s=>document.querySelector(s);
+
+const messages=[
+"hi ma'am happy teacher's day Thankyou for trusting me as your student and thankyou for  sacrifice us take care always ma'am",
+"Happy Teacher's Day, Ma'am! thank you for your endless patience with us, even though we are very naughty to you. I am so thankful that I became your student. Thank you for all the chances you gave us and for always understanding us. We are so lucky to have you as our teacher, Ma'am. we appreciate and love you, Ma'am!",
+"You saw the potential I tried to hide, Met my stubbornness with patient pride. Though I gave you reasons to walk away, I’m glad you chose to guide my way.",
+"Thank you for being Patient and teaching us on research.",
+"I'm very proud of you ma'am!",
+"Thank you ma'am for being patient even if I always feel sleepy in your class, and sometimes I even sleep even if you're in the front teaching us, and I'm very thankful to have you us our class adviser you always wake me up so I can listen to your class thank you so much",
+"Happy Teacher’s Day Ms! Since day 1 you entered our room in Grade 11, you have been part of our journey until Grade 12. Thank you for your patience, guidance, and for always teaching us with kindness. We are truly grateful for all the lessons, advice, and memories you have shared with us. We may not always say it, but we appreciate everything you do for us. Tyms Ms! for being our teacher and for being part of our journey. We will always remember you.",
+"Hello, Ms. Sanchez! Thank you for being our adviser, even though maot kaayo mig batasan, haha. All jokes aside, thank you bitaw, Ma'am, and I'm very sorry for not submitting my project on time.",
+"Thank you ms for Supporting us and supporting me coding project :>",
+"Advance Happy Teachers' Day Ms. Sanchez! Before tomorrow comes, we just want to thank you from the bottom of our hearts. Thank you for your patience, your guidance, and for never giving up on us bisan unsahay mga badlongon kaayo mi. Dako kaayo mi ug pasalamat nga Ikaw among adviser. You deserve all the love and appreciation tomorrow and always.",
+"Hello, Ma'am Sanchez! Happy teacher's day. Iam so grateful that we have you as our adviser. We learned a lot from you and we will always cherish that, we are doing our best as students and I will do my best as a student under your advisory. May you win your silent battles and receive more blessings to come, amping always miss!.",
+"Dear Miss Sanchez, Happy Teacher’s Day! 🥹 Thank you for being patient with us and for always believing in us, even when we don’t believe in ourselves. Dili man mi perfect nga students, pero you still choose to understand and guide us. Thank you for every lesson, advice, and little effort you give. Basi dili namo always maingon, pero we really appreciate you more than you know. Salamat kaayo, Miss Sanchez. You’ll always be one of those teachers we’ll remember.",
+"Dear Ms. Sanchez,                                                          Happy Teacher’s Day! Thank you for always teaching and guiding us. I really appreciate your patience, kindness, and all the effort you put into helping us learn. I hope you have a wonderful Teacher’s Day!                    Thank you so much, Ma’am! 💐",
+"Thank you for everything, Miss! Despite na badlungon kaayo mi, you are still so kind and patient with us. We're so grateful na ikaw amoang adviser na mo-jive in sa amoang jokes, kabuang, and mga chika namo. You made us feel very open sad when it comes to our problems, and thankful kaayo mi sa imohang mga advice namo. Thank you for everything, Miss! Happy Teachers' Day!.",
+"Happy Teachers Day! Thank you for everything. 💙"
+];
+
+const opened=Array(15).fill(false);
+let currentIndex=-1,currentMail=null,mailNumber=0;
+
+$("#noBtn").onclick=()=>{
+  $("#intro .card").innerHTML='<h1>Oops! 😅</h1><p>I think you are not belong here. :(</p><button class="btn" onclick="location.reload()">Go Back</button>';
+};
+
+$("#yesBtn").onclick=()=>{
+  $("#intro").style.display="none";
+  $("#question").style.display="grid";
+  typewriter($("#questionText"),"Can we ask you a question? Who is your favorite Strand?",38);
+  setTimeout(buildOptions,1500);
+};
+
+function typewriter(el,text,speed){
+  el.textContent="";
+  let i=0;
+  function run(){
+    if(i<text.length){el.textContent+=text.charAt(i++);setTimeout(run,speed)}
+  }
+  run();
+}
+
+function buildOptions(){
+ ["Shaw-11","Ashh-11","STEM-11","BA-11","ICT-11","ICT-12","HUMSS-12","ABM-12","STEM-12"].forEach(name=>{
+  const b=document.createElement("button");
+  b.className="btn";b.textContent=name;
+  b.onclick=()=>name==="ICT-12"?correct():wrong(b);
+  $("#options").appendChild(b);
+ });
+}
+
+function wrong(b){
+ $("#wrongText").textContent=["Missed Click ka Ms?","Lag Guro Ka ms maoy Missed click","Basin Lowbat Ka ms ba maoy di mao ang ma click","Na Basin Guba Iming Cellphone Miss ba maoy Wrong ang ma click"][Math.floor(Math.random()*4)];
+ b.animate([{opacity:1,transform:"translateX(0)"},{opacity:0,transform:"translateX(24px)"}],{duration:350,fill:"forwards"});
+ setTimeout(()=>b.remove(),350);
+}
+
+function correct(){
+ $("#question").style.display="none";$("#countdown").style.display="grid";
+ let n=5;$("#count").textContent=n;
+ const t=setInterval(()=>{n--;$("#count").textContent=n;if(n<=0){clearInterval(t);startPage()}},1000);
+}
+
+function startPage(){
+ $("#countdown").style.display="none";$("#teacherPage").style.display="block";
+ startTeacherTyping();
+ startSlideshow();
+ startMusic();
+ buildTracker();
+ for(let i=0;i<8;i++)setTimeout(spawnMail,i*430);
+}
+
+/* RELIABLE TYPING ANIMATION */
+async function typeTeacherText(el,text,speed=90){
+ el.textContent="";
+ for(const char of text){
+   el.textContent+=char;
+   await new Promise(resolve=>setTimeout(resolve,speed));
+ }
+}
+
+async function eraseTeacherText(el,speed=55){
+ const text=el.textContent;
+ for(let i=text.length;i>0;i--){
+   el.textContent=text.slice(0,i-1);
+   await new Promise(resolve=>setTimeout(resolve,speed));
+ }
+}
+
+async function startTeacherTyping(){
+ const l1=$("#typingLine1"),l2=$("#typingLine2");
+ const c1=$("#cursor1"),c2=$("#cursor2");
+
+ while(true){
+   // TYPE 1
+   c1.style.display="inline-block";
+   c2.style.display="none";
+   await typeTeacherText(l1,"Happy Teacher Day!",90);
+
+   // HOLD
+   await new Promise(resolve=>setTimeout(resolve,900));
+
+   // ERASE 1
+   await eraseTeacherText(l1,55);
+
+   // TYPE 2
+   c1.style.display="none";
+   c2.style.display="inline-block";
+   await typeTeacherText(l2,"For You Ms Sanchez",90);
+
+   // HOLD
+   await new Promise(resolve=>setTimeout(resolve,900));
+
+   // ERASE 2
+   await eraseTeacherText(l2,55);
+
+   // Small pause before starting again
+   c2.style.display="none";
+   await new Promise(resolve=>setTimeout(resolve,350));
+ }
+}
+
+function buildTracker(){
+ for(let i=0;i<15;i++){
+  const d=document.createElement("div");
+  d.className="num";
+  d.id="n"+i;
+  d.textContent=i+1;
+  d.title="Open Message #"+(i+1);
+  d.setAttribute("role","button");
+  d.tabIndex=0;
+  d.onclick=()=>openMessageByIndex(i);
+  d.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openMessageByIndex(i)}};
+  $("#grid").appendChild(d);
+ }
+}
+
+function spawnMail(){
+ const el=document.createElement("div");el.className="mail";el.dataset.index=mailNumber++%15;
+ el.style.setProperty("--x",(Math.random()*92+4).toFixed(1)+"vw");
+ el.style.setProperty("--d",(7+Math.random()*5).toFixed(2)+"s");
+ el.style.setProperty("--delay",(-Math.random()*5).toFixed(2)+"s");
+ el.style.setProperty("--r",((Math.random()*14)-7).toFixed(1)+"deg");
+ el.innerHTML='<div class="envelope"><div class="letter"></div><div class="flap"></div></div>';
+ el.onclick=()=>openMail(el,+el.dataset.index);
+ $("#mailRain").appendChild(el);
+
+ const duration=parseFloat(el.style.getPropertyValue("--d"))*1000;
+ const delay=parseFloat(el.style.getPropertyValue("--delay"))*1000;
+ const lifetime=Math.max(1000,duration+delay+250);
+ setTimeout(()=>{
+  if(el.isConnected&&!el.classList.contains("opening")){el.remove();spawnMail()}
+ },lifetime);
+}
+
+function openMail(el,index){
+ if(el.classList.contains("opening"))return;
+
+ currentMail=el;
+ el.classList.add("opening");
+ setTimeout(()=>openMessageByIndex(index),1150);
+}
+
+function openMessageByIndex(index){
+ currentIndex=index;
+ opened[index]=true;
+
+ $("#popupTitle").textContent="Anonymous Message #"+(index+1);
+ $("#popupMessage").textContent=messages[index];
+ $("#name").value="Sanchez";
+ $("#comment").value="";
+ $("#status").textContent="";
+ $("#trackerPanel").classList.remove("show");
+
+ const trackerItem=$("#n"+index);
+ if(trackerItem){
+   trackerItem.classList.add("done");
+   trackerItem.textContent="✓";
+ }
+ $("#trackerCount").textContent=opened.filter(Boolean).length+"/15";
+
+ $("#popup").classList.remove("show");
+ $("#layer").style.display="grid";
+ requestAnimationFrame(()=>$("#popup").classList.add("show"));
+}
+
+$("#commentToggle").onclick=()=>{
+  const section=$("#commentSection");
+  const opening=!section.classList.contains("show");
+  section.classList.toggle("show",opening);
+  $("#commentToggle").classList.toggle("open",opening);
+  $("#commentToggleText").textContent=opening?"Hide Comments":"Comment";
+  if(opening)renderCurrentMessageComments();
+};
+
+$("#closeBtn").onclick=closePopup;
+$("#closeBtn2").onclick=closePopup;
+function closePopup(){
+ $("#popup").classList.remove("show");
+ setTimeout(()=>{$("#layer").style.display="none";if(currentMail)currentMail.remove();currentMail=null;spawnMail()},480);
+}
+$("#trackerBtn").onclick=()=>$("#trackerPanel").classList.toggle("show");
+
+$("#saveBtn").onclick=async()=>{
+ const name=$("#name").value.trim()||"Sanchez";
+ const comment=$("#comment").value.trim();
+ if(!comment){$("#status").textContent="Please write a comment first.";return}
+ if(comment.length>300){$("#status").textContent="Comment is too long.";return}
+
+ try{
+  $("#saveBtn").disabled=true;
+  $("#status").textContent="Saving...";
+
+  await push(ref(db,"teachersDay/comments"),{
+   name:name,
+   comment:comment,
+   messageNumber:currentIndex+1,
+   createdAt:serverTimestamp()
+  });
+
+  // Clear only the input. The opened message stays visible above.
+  $("#comment").value="";
+  $("#status").textContent="Saved successfully. 💜";
+
+ }catch(err){
+  console.error(err);
+  $("#status").textContent="Failed to save. Check Firebase Database Rules.";
+ }finally{
+  $("#saveBtn").disabled=false;
+ }
+};
+
+const commentsRef=ref(db,"teachersDay/comments");
+let allCommentsData={};
+
+function renderCurrentMessageComments(){
+  const list=$("#commentsList");
+  list.innerHTML="";
+
+  const entries=Object.entries(allCommentsData)
+    .filter(([id,item]) => Number(item?.messageNumber) === currentIndex+1)
+    .sort((a,b)=>{
+      const at=a[1]?.createdAt??0;
+      const bt=b[1]?.createdAt??0;
+      if(at!==bt)return at-bt;
+      return a[0].localeCompare(b[0]);
+    });
+
+  if(!entries.length){
+    list.innerHTML='<div class="commentEmpty">No comments on this message yet.</div>';
+    return;
+  }
+
+  entries.forEach(([id,item])=>{
+    const box=document.createElement("div");
+    box.className="savedComment";
+
+    const header=document.createElement("div");
+    header.className="savedCommentHeader";
+
+    const name=document.createElement("strong");
+    name.textContent=item.name||"Sanchez";
+
+    const messageNo=document.createElement("span");
+    messageNo.className="savedCommentMessage";
+    messageNo.textContent="· Message #"+(Number(item.messageNumber)||0);
+
+    header.append(name,messageNo);
+
+    const text=document.createElement("div");
+    text.className="savedCommentText";
+    text.textContent=item.comment||"";
+
+    const del=document.createElement("button");
+    del.className="savedCommentDelete";
+    del.textContent="×";
+    del.title="Delete comment";
+    del.onclick=()=>openDeleteModal(id,item);
+
+    box.append(header,text,del);
+    list.appendChild(box);
+  });
+}
+
+onValue(commentsRef,snapshot=>{
+  allCommentsData=snapshot.val()||{};
+  renderCurrentMessageComments();
+});
+
+
+const deleteModal=$("#deleteModal");
+const deletePreview=$("#deletePreview");
+const deleteCancel=$("#deleteCancel");
+const deleteConfirm=$("#deleteConfirm");
+let pendingDeleteId=null;
+
+function openDeleteModal(id,item){
+  pendingDeleteId=id;
+  deletePreview.textContent="Message #"+(Number(item.messageNumber)||0)+" — "+(item.comment||"");
+  deleteConfirm.disabled=false;
+  deleteConfirm.textContent="Delete";
+  deleteModal.classList.add("show");
+  deleteModal.setAttribute("aria-hidden","false");
+}
+
+function closeDeleteModal(){
+  pendingDeleteId=null;
+  deleteModal.classList.remove("show");
+  deleteModal.setAttribute("aria-hidden","true");
+}
+
+deleteCancel.onclick=closeDeleteModal;
+deleteModal.onclick=e=>{if(e.target===deleteModal)closeDeleteModal()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&deleteModal.classList.contains("show"))closeDeleteModal()});
+
+deleteConfirm.onclick=async()=>{
+  if(!pendingDeleteId)return;
+  const id=pendingDeleteId;
+  deleteConfirm.disabled=true;
+  deleteConfirm.textContent="Deleting...";
+  try{
+    await remove(ref(db,"teachersDay/comments/"+id));
+    deleteConfirm.textContent="Deleted ✓";
+    setTimeout(closeDeleteModal,450);
+  }catch(err){
+    console.error(err);
+    deleteConfirm.disabled=false;
+    deleteConfirm.textContent="Try Again";
+  }
+};
+
+const teacherImage=$("#teacherImage"),imageViewer=$("#imageViewer"),viewerImage=$("#viewerImage"),viewerClose=$("#viewerClose");
+
+// IMAGE SLIDESHOW — put these files beside this HTML file.
+const slideshowImages=["haha.jpeg","1.jpeg","2.jpeg","3.jpeg","4.jpeg"];
+let slideIndex=0,slideTimer=null,slideBusy=false;
+
+function startSlideshow(){
+  if(slideTimer)clearInterval(slideTimer);
+  slideIndex=0;
+  teacherImage.src=slideshowImages[0];
+  slideTimer=setInterval(()=>{
+    if(slideBusy)return;
+    slideBusy=true;
+    teacherImage.classList.add("fade");
+    setTimeout(()=>{
+      slideIndex=(slideIndex+1)%slideshowImages.length;
+      teacherImage.src=slideshowImages[slideIndex];
+      teacherImage.onload=()=>{
+        teacherImage.classList.remove("fade");
+        slideBusy=false;
+      };
+      setTimeout(()=>{teacherImage.classList.remove("fade");slideBusy=false},600);
+    },450);
+  },3000);
+}
+
+const bgMusic=$("#bgMusic"),musicToggle=$("#musicToggle"),musicRange=$("#musicVolume"),musicLabel=$("#musicState");
+bgMusic.autoplay=false;
+bgMusic.pause();
+function updateMusicUI(){
+  const pct=Math.round(bgMusic.volume*100);
+  musicRange.value=bgMusic.volume;
+  musicLabel.textContent=bgMusic.paused?"Paused":"Playing";
+  musicToggle.textContent=bgMusic.paused?"▶":"Ⅱ";
+}
+async function startMusic(){
+  bgMusic.volume=0;
+  bgMusic.muted=false;
+  updateMusicUI();
+
+  // Start immediately when the picture/message page is reached.
+  try{
+    await bgMusic.play();
+    fadeMusicIn();
+  }catch(e){
+    // If the browser blocks unmuted autoplay, retry as soon as
+    // the page receives its first user interaction.
+    bgMusic.muted=true;
+    try{
+      await bgMusic.play();
+      bgMusic.muted=false;
+      fadeMusicIn();
+    }catch(err){
+      updateMusicUI();
+    }
+  }
+}
+
+function fadeMusicIn(){
+  clearInterval(window.musicFadeTimer);
+  let v=0;
+  bgMusic.volume=0;
+  window.musicFadeTimer=setInterval(()=>{
+    v=Math.min(0.45,v+0.025);
+    bgMusic.volume=v;
+    updateMusicUI();
+    if(v>=0.45)clearInterval(window.musicFadeTimer);
+  },120);
+}
+
+["pointerdown","touchstart","click","keydown"].forEach(evt=>{
+  document.addEventListener(evt,()=>{
+    if(bgMusic.paused){
+      bgMusic.muted=false;
+      bgMusic.play().then(fadeMusicIn).catch(()=>{});
+    }
+  },{once:true,capture:true});
+});
+musicToggle.onclick=async()=>{
+  if(bgMusic.paused){
+    try{await bgMusic.play()}catch(e){}
+  }else bgMusic.pause();
+  updateMusicUI();
+};
+musicRange.oninput=()=>{bgMusic.volume=Number(musicRange.value);updateMusicUI()};
+
+teacherImage.onclick=()=>{viewerImage.src=teacherImage.currentSrc||teacherImage.src;imageViewer.classList.add("show");imageViewer.setAttribute("aria-hidden","false")};
+function closeImageViewer(){imageViewer.classList.remove("show");imageViewer.setAttribute("aria-hidden","true")}
+viewerClose.onclick=closeImageViewer;
+imageViewer.onclick=e=>{if(e.target===imageViewer)closeImageViewer()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeImageViewer()});
+</script>
+</body>
+</html>
